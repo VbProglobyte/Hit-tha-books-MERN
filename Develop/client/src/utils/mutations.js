@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-
+//  use user-controller for correct name {USER, BOOK}
 export const LOGIN_USER = gql`
   mutation login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
@@ -7,6 +7,7 @@ export const LOGIN_USER = gql`
       user {
         _id
         username
+        email
       }
     }
   }
@@ -19,38 +20,38 @@ export const ADD_USER = gql`
       user {
         _id
         username
+        email
       }
     }
   }
 `;
-
-export const ADD_THOUGHT = gql`
-  mutation addThought($thoughtText: String!) {
-    addThought(thoughtText: $thoughtText) {
+// save book
+// mutation addThought($thoughtText: String!) {
+//   addThought(thoughtText: $thoughtText) {
+export const SAVE_BOOK = gql`
+  mutation SaveBook($_id: ID!, $book: BookInput!){
+    saveBook(_id: $_id, book: $book) {
       _id
-      thoughtText
-      thoughtAuthor
-      createdAt
-      comments {
-        _id
-        commentText
+      username
+      email
+      savedBooks {
+          title
       }
     }
   }
 `;
-
-export const ADD_COMMENT = gql`
-  mutation addComment($thoughtId: ID!, $commentText: String!) {
-    addComment(thoughtId: $thoughtId, commentText: $commentText) {
+// remove book 
+// mutation addComment($thoughtId: ID!, $commentText: String!) {
+//   addComment(thoughtId: $thoughtId, commentText: $commentText) {
+export const REMOVE_BOOK = gql`
+mutation addComment($thoughtId: ID!, $commentText: String!) {
+  addComment(thoughtId: $thoughtId, commentText: $commentText) {
+mutation RemoveBook($_id: ID!, $bookId: String!){
+  removeBook(_id: $_id, bookId: $bookId){
       _id
-      thoughtText
-      thoughtAuthor
-      createdAt
-      comments {
-        _id
-        commentText
-        createdAt
-      }
+      savedBooks {
+        title
+    }
     }
   }
 `;
