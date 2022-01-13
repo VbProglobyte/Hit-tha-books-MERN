@@ -19,7 +19,7 @@ module.exports = {
       return res.status(400).json({ message: 'You have no token!' });
     }
 
-    // verify token and get user data out of it
+    // verify token and get user data out of it - activity 25
     try {
       const { data } = jwt.verify(token, secret, { maxAge: expiration });
       req.user = data;
@@ -31,6 +31,7 @@ module.exports = {
     // send to next endpoint
     next();
   },
+  // this portion in activity 24
   signToken: function ({ username, email, _id }) {
     const payload = { username, email, _id };
 
