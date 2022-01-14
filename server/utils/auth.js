@@ -4,9 +4,13 @@ const jwt = require('jsonwebtoken');
 const secret = 'mysecretsshhhhh';
 const expiration = '2h';
 
+// `auth.js`: Update the auth middleware function to work with the GraphQL API.
+
+// 	**Hint**: Refer to the class activities as a refresher on how to do this.
+
 module.exports = {
   // function for our authenticated routes
-  authMiddleware: function (req, res, next) {
+  authMiddleware: function (req) {
     // allows token to be sent via  req.query or headers
     let token = req.query.token || req.headers.authorization;
 
@@ -16,7 +20,7 @@ module.exports = {
     }
 
     if (!token) {
-      return res.status(400).json({ message: 'You have no token!' });
+      return req;
     }
 
     // verify token and get user data out of it - activity 25
