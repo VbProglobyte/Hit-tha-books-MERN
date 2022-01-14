@@ -1,5 +1,5 @@
 import React from 'react';
-// from activity 26
+// from activity 26 - apollo provider  - do i need the https link??
 import {
   ApolloClient,
   InMemoryCache,
@@ -7,11 +7,12 @@ import {
   createHttpLink,
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-
+// ///////////////////////////////////////////////////////////////////////////
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import SearchBooks from './pages/SearchBooks';
 import SavedBooks from './pages/SavedBooks';
 import Navbar from './components/Navbar';
+// //////////////////////////////////////////////////////////////////////////
 
 // Construct our main GraphQL API endpoint - activity 26, below to fucntion App ()
 const httpLink = createHttpLink({
@@ -29,7 +30,9 @@ const authLink = setContext((_, { headers }) => {
     },
   };
 });
+// ///////////////////////////////////////////////////////////
 
+// apollo client - for sure need 
 const client = new ApolloClient({
   // Set up our client to execute the `authLink` middleware prior to making the request to our GraphQL API
   link: authLink.concat(httpLink),
@@ -38,7 +41,7 @@ const client = new ApolloClient({
 
 function App() {
   return (
-    // apollo provider code found in activity 26
+    // apollo provider code found in activity 26 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     <ApolloProvider client={client}> 
       <Router>
         <>
