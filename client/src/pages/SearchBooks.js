@@ -2,14 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { Jumbotron, Container, Col, Form, Button, Card, CardColumns } from 'react-bootstrap';
 
 import Auth from '../utils/auth';
-import { saveBook, searchGoogleBooks } from '../utils/API';
+// import { saveBook, searchGoogleBooks } from '../utils/API';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 // queries and mutations as well as the ...
 // Use the Apollo `useMutation()` Hook to execute the `SAVE_BOOK` mutation in the `handleSaveBook()` function instead of the `saveBook()` function imported from the `API` file.
 import { SAVE_BOOK } from '../utils/mutations'
-import { GET_ME } from '../utils/queries'
+// import { GET_ME } from '../utils/queries'
 import { useMutation } from '@apollo/client'
+
 // ///////////////////////////////////////////////////////////////////////////////
+// * Remove the `useEffect()` Hook that sets the state for `UserData`.
+
+// 	* Instead, use the `useQuery()` Hook to execute the `GET_ME` query on load and save it to a variable named `userData`.
+
+// 	* Use the `useMutation()` Hook to execute the `REMOVE_BOOK` mutation in the `handleDeleteBook()` function instead of the `deleteBook()` function that's imported from `API` file. (Make sure you keep the `removeBookId()` function in place!)
 
 const SearchBooks = () => {
   // create state for holding returned google api data
@@ -21,7 +27,7 @@ const SearchBooks = () => {
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
 
   // Hook to execute the `SAVE_BOOK` mutation - useMutation
-  const [save_book] = useMutation(SAVE_BOOK)
+  const [save_book, { error }] = useMutation(SAVE_BOOK)
 
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
   // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
@@ -38,8 +44,13 @@ const SearchBooks = () => {
     }
 
     try {
-      const response = await searchGoogleBooks(searchInput);
+      // const response = await searchGoogleBooks(searchInput);
+    //  **************************************************************
+      const response = await fetch(
+        `https://www.googleapis.com/books/v1/volumes?q=${searchInput}` // from API.js
+      )
 
+      
       if (!response.ok) {
         throw new Error('something went wrong!');
       }
@@ -77,17 +88,21 @@ const SearchBooks = () => {
 
     // * Make sure you keep the logic for saving the book's ID to state in the `try...catch` block! 
 
-    try {
-      const response = await saveBook(bookToSave, token);
+    // try {
+    //   const response = await saveBook(bookToSave, token);
       // const response = await save_book({
       //   variables: {
       //     _id: _id,
       //     book: bookToSave
       //   }
       // })
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
+      try {
+        const { data } = await save_book({ 
+          variables: { bookData: { ...bookToSave } },
+        });
+      // if (!data.ok) {
+      //   throw new Error('something went wrong!');
+      // }
 
       // if book successfully saves to user's account, save book id to state
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);

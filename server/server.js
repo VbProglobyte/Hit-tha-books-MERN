@@ -15,6 +15,16 @@ const server = new ApolloServer({
   resolvers,
 });
 
+mongoose.connect(
+  process.env.MONGODB_URI || 'mongodb://localhost/books',
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+  },
+);
+
 // middleware express server
 server.applyMiddleware({ app });
 
@@ -34,3 +44,4 @@ app.use(routes);
 db.once('open', () => {
   app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}`));
 });
+
