@@ -15,15 +15,15 @@ const server = new ApolloServer({
   resolvers,
 });
 
-mongoose.connect(
-  process.env.MONGODB_URI || 'mongodb://localhost/books',
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-  },
-);
+// mongoose.connect(git 
+//   process.env.MONGODB_URI || 'mongodb://localhost/books',
+//   {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//     useCreateIndex: true,
+//     useFindAndModify: false,
+//   },
+// );
 
 // middleware express server
 server.applyMiddleware({ app });
