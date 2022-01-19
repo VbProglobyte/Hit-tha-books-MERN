@@ -35,3 +35,6 @@ https://graphql.org/graphql-js/authentication-and-express-middleware/
 
 https://mongoosejs.com/docs/models.html
 
+https://reactjs.org/docs/hooks-reference.html#usereducer
+
+https://devcenter.heroku.com/articles/git#creating-a-heroku-remote

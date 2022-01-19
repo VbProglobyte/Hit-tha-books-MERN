@@ -6,13 +6,14 @@ const db = require('./config/connection');
 const routes = require('./routes');
 // require the schema 
 const { typeDefs, resolvers } = require('./schemas');
-
+const { authMiddleware } = require('./utils/auth');
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3003;
 // appolo server variable label "server"  includes args {typeDefs, resolvers}
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: authMiddleware,
 });
 
 // mongoose.connect(
@@ -40,8 +41,11 @@ if (process.env.NODE_ENV === 'production') {
 // });
 
 app.use(routes);
-// open on local host with graphql
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
+// open on local host with graphql - server can't be reached 
 db.once('open', () => {
-  app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}`));
+  app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}${server.graphqlPath}`));
 });
 
