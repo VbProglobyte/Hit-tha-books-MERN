@@ -2,6 +2,10 @@
 
 A MERN book search engine that needs a refactor for the API to use GraphQL on the back end and add some functionality to the front end.
 
+## NOTE :
+this app is not functioning correctly. 
+
+
 ## Tech
 
     - NPM
