@@ -1,15 +1,21 @@
 const { AuthenticationError } = require('apollo-server-express'); // added from activity 26
-const { Tech, Matchup } = require('../models');
-const { User } = require('../models');
+// const { User, savedBooks } = require('../models');
+const { User, Book } = require('../models');
 // import sign token function from auth
 const { signToken } = require('../utils/auth');
 
 const resolvers = {
   Query: {
     // added per activity 26 example 
-    me: async (parent, { _id }) => {
-      return await User.findById({ _id })
+    me: async (parent, args, context) => {
+      if (context.user) {
+        return User.findOne({ _id: context.user._id }).populate("books");
+      }
+      throw new AuthenticationError("Oops! Please login!");
     },
+    // me: async (parent, { _id }) => {
+    //   return await User.findById({ _id })
+    // },
     // //////////////////////////////////////////////////////// not sure the point of these
     // tech: async () => {
     //   return Tech.find({});
@@ -22,46 +28,48 @@ const resolvers = {
 
   Mutation: {
     // added these mutations using the user-controller.js for ref
-    addUser: async (parent, { username, email, password }) => {
-      const user = await User.create({ username, email, password });
+    addUser: async (parent, args) => {
+      const user = await User.create(args);
       const token = signToken(user);
       return { token, user };
     },
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });
-
       if (!user) {
-        throw new AuthenticationError('No user found with this email address');
+        throw new AuthenticationError("Uh oh! Incorrect email or password.");
       }
-
-      const correctPw = await user.isCorrectPassword(password);
-
-      if (!correctPw) {
-        throw new AuthenticationError('Incorrect credentials');
+      const correctPassword = await user.isCorrectPassword(password);
+      if (!correctPassword) {
+        throw new AuthenticationError("Uh oh! Incorrect email or password.");
       }
-
       const token = signToken(user);
-
       return { token, user };
     },
-    saveBook: async (parents, { _id, book }) => {
-      const updatedUser = User.findByIdAndUpdate(_id,
-        {
-          $push: {
-            savedBooks: book
-          }
-        })
-      return updatedUser
+    saveBook: async (parent, { book }, context) => {
+      if (context.user) {
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: user._id },
+          { $addToSet: { savedBooks: book } },
+          { new: true }
+        );
+        return updatedUser;
+      }
+      throw new AuthenticationError("Oops! Please login!");
     },
-    removeBook: async (parent, { _id, bookId }) => {
-      const updatedUser = await User.findByIdAndUpdate(
-        _id,
-        { $pull: { savedBooks: { _id: bookId } } }
-      )
-      return updatedUser
+    removeBook: async (parent, { book }, context) => {
+      if (context.user) {
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: user._id },
+          { $pull: { savedBooks: { bookId: bookId } } },
+          { new: true }
+        );
+        return updatedUser;
+     
+    
+      }
+      
     },
-   
   },
 };
 
-module.exports = resolvers;
+  module.exports = resolvers;
