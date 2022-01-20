@@ -30,7 +30,7 @@ GraphQL kind of is working, but I am getting a weird server error that I have no
 
 ## Installation
 
-1. npm install in root, client, server folders 
+1. npm install in root, client, server folders [npm i], [npm i @apollo/client graphql]
 2. npm run build (makes a build folder in the client folder)
 3. npm run develop (should launch the app)
 
