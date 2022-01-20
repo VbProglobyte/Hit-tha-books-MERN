@@ -14,6 +14,7 @@ I have tried to use killtask commands, but none have worked so far ...
 ![image](https://user-images.githubusercontent.com/83515305/150402760-5355b1e5-7c57-4764-8bba-75224e7c02a3.png)
 
 If anyone has had these errors and has fixed them please let me know. I'd like to fix these weird errors so I can sleep at night. :P
+GraphQL kind of is working, but I am getting a weird server error that I have not been able to figure out.
 ![image](https://user-images.githubusercontent.com/83515305/150403130-968cd15b-b4a5-4c48-91fb-d7cf5c94b5cc.png)
 
 ## Tech
