@@ -44,8 +44,8 @@ app.use(routes);
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
-// open on local host with graphql - server can't be reached 
+// open on local host with graphql - server can't be reached ${server.graphqlPath}
 db.once('open', () => {
-  app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}${server.graphqlPath}`));
+  app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}`));
 });
 
