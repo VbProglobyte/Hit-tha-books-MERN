@@ -5,10 +5,14 @@ const { ApolloServer } = require('apollo-server-express');
 const db = require('./config/connection');
 const routes = require('./routes');
 // require the schema 
-const { typeDefs, resolvers } = require('./schemas');
+// const { typeDefs, resolvers } = require('./schemas');
+const typeDefs = require("./schemas/typeDefs");
+const resolvers = require("./schemas/resolvers");
+
 const { authMiddleware } = require('./utils/auth');
+
 const app = express();
-const PORT = process.env.PORT || 3003;
+const PORT = process.env.PORT || 3001;
 // appolo server variable label "server"  includes args {typeDefs, resolvers}
 const server = new ApolloServer({
   typeDefs,
@@ -46,6 +50,7 @@ app.get('*', (req, res) => {
 });
 // open on local host with graphql - server can't be reached ${server.graphqlPath}
 db.once('open', () => {
-  app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}`));
+  app.listen(PORT, () => console.log(`🌍 Now listening on localhost:${PORT}${server.graphqlPath}`));
+  // console.log(`Use GraphQL at http://localhost:${PORT}${server.graphqlPath}`);
 });
 
