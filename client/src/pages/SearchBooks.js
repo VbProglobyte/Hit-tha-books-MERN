@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Jumbotron, Container, Col, Form, Button, Card, CardColumns } from 'react-bootstrap';
 
 import Auth from '../utils/auth';
-// import { saveBook, searchGoogleBooks } from '../utils/API';
+import {  searchGoogleBooks } from '../utils/API';
 import { saveBookIds, getSavedBookIds } from '../utils/localStorage';
 // queries and mutations as well as the ...
 // Use the Apollo `useMutation()` Hook to execute the `SAVE_BOOK` mutation in the `handleSaveBook()` function instead of the `saveBook()` function imported from the `API` file.
@@ -27,7 +27,7 @@ const SearchBooks = () => {
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
 
   // Hook to execute the `SAVE_BOOK` mutation - useMutation
-  const [save_book, { error }] = useMutation(SAVE_BOOK)
+  const [saveBook] = useMutation(SAVE_BOOK)
 
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
   // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
@@ -46,10 +46,7 @@ const SearchBooks = () => {
     try {
       // const response = await searchGoogleBooks(searchInput);
     //  **************************************************************
-      const response = await fetch(
-        `https://www.googleapis.com/books/v1/volumes?q=${searchInput}` // from API.js
-      )
-
+      const response = await searchGoogleBooks(searchInput) // from API.js
       
       if (!response.ok) {
         throw new Error('something went wrong!');
@@ -97,19 +94,22 @@ const SearchBooks = () => {
       //   }
       // })
       try {
-        const { data } = await save_book({ 
-          variables: { bookData: { ...bookToSave } },
+        const response = await saveBook({ 
+          variables: {
+            input: bookToSave
+          }
         });
-      // if (!data.ok) {
-      //   throw new Error('something went wrong!');
-      // }
-
-      // if book successfully saves to user's account, save book id to state
-      setSavedBookIds([...savedBookIds, bookToSave.bookId]);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  
+        if (!response) {
+          throw new Error('something went wrong!');
+        }
+  
+        // if book successfully saves to user's account, save book id to state
+        setSavedBookIds([...savedBookIds, bookToSave.bookId]);
+      } catch (err) {
+        console.error(err);
+      }
+    };
 // .....................................................................
   return (
     <>

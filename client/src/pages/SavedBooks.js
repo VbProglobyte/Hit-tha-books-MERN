@@ -1,5 +1,5 @@
 // import React from 'react';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Jumbotron, Container, CardColumns, Card, Button } from 'react-bootstrap';
 
 // import { getMe, deleteBook } from '../utils/API';
@@ -11,7 +11,7 @@ import { useQuery, useMutation } from '@apollo/client'
 // //////////////////////////////////////////////////////
 import { GET_ME } from '../utils/queries'
 import { REMOVE_BOOK } from '../utils/mutations'
-
+// /////////////////////////////////////////////////////
 // * Remove the `useEffect()` Hook that sets the state for `UserData`.
 
 // * Instead, use the `useQuery()` Hook to execute the `GET_ME` query on load and save it to a variable named `userData`.
@@ -19,11 +19,12 @@ import { REMOVE_BOOK } from '../utils/mutations'
 // * Use the `useMutation()` Hook to execute the `REMOVE_BOOK` mutation in the `handleDeleteBook()` function instead of the `deleteBook()` function that's imported from `API` file. (Make sure you keep the `removeBookId()` function in place!)
 
 const SavedBooks = () => {
-  
+  // , { error } - dont know why this is giving me errors
   const { userDataLength, data } = useQuery(GET_ME);
-  const [removeBook, { error }] = useMutation(REMOVE_BOOK);
+  const [removeBook] = useMutation(REMOVE_BOOK);
 // GET_ME query 
   const userData = data?.me || [];
+  // console.log(userData);
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
@@ -35,8 +36,8 @@ const SavedBooks = () => {
     }
 
     try {
-      
-      const { data } = await removeBook({
+      // {data} was giving me issues - removing for now 
+      await removeBook({
         variables: { bookId }
       });
 
@@ -46,8 +47,6 @@ const SavedBooks = () => {
       console.error(err);
     }
   };
-
-
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   // const handleDeleteBook = async (bookId) => {
   //   const [removeBook, { error }] = useMutation(REMOVE_BOOK);
@@ -68,7 +67,6 @@ const SavedBooks = () => {
   //   } catch (err) {
   //     console.error(err);
   //   }
-  
   
   // if data isn't here yet, say so
   if (!userDataLength) {
